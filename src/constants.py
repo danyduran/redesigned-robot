@@ -10,3 +10,5 @@ USERNAME = "danycduran@gmail.com"
 PASSWORD = "StoriStori"
 PORT_EMAIL = 587
 HOST_EMAIL = "smtp.gmail.com"
+LEN_WORD = 15
+RECIPIENTS = ["danielisidrocustodioduran@gmail.com"]

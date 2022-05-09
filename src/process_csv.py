@@ -1,8 +1,30 @@
 import csv
+from random import choice
+from string import ascii_letters
+
+
+
 
 from datetime import datetime
 
-from constants import COLUMNS, FORMAT_DATE, FORMAT_MONTH
+from constants import COLUMNS, FORMAT_DATE, FORMAT_MONTH, LEN_WORD
+
+
+def generate_name_file():
+    return "".join(choice(ascii_letters) for _ in range(LEN_WORD))
+
+
+def save_csv_tmp(csv_data):
+    filename= generate_name_file()
+    FILENAME = f"/tmp/{filename}.csv"
+
+    with open(FILENAME, 'w') as csvfile:
+        headers =csv_data[0].split(",")
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(headers)
+        csvwriter.writerows([row.split(",") for row in csv_data[1:]])
+
+    return f"{filename}.csv"
 
 
 def get_balance(file):
@@ -30,7 +52,7 @@ def get_balance(file):
         if operation == "+":
             balance["count_credit_operation"] += 1
             balance["total_credit"] += amount
-            balance["total"] == amount
+            balance["total"] += amount
         elif operation == "-":
             balance["total"] -= amount
             balance["total_debit"] -= amount
