@@ -1,3 +1,4 @@
+import logging
 import os
 import smtplib
 from email import encoders
@@ -40,7 +41,8 @@ def send_email(
     try:
         attach_file(filename_csv, message)
     except Exception as error:
-        print(error)
+        logging.error(error)
+
     server = smtplib.SMTP(HOST_EMAIL, PORT_EMAIL)
 
     try:
@@ -48,7 +50,7 @@ def send_email(
         server.login(USERNAME, PASSWORD)
         server.sendmail(USERNAME, recipients, message.as_string())
     except Exception as error:
-        print(error)
+        logging.error(error)
     finally:
         server.quit()
 
@@ -62,4 +64,4 @@ def attach_file(filename_csv, message):
         "Content-Decomposition", "attachment", filename="transaction.csv"
     )
     message.attach(payload)
-    print("attach sucess")
+    logging.info("attach sucess")

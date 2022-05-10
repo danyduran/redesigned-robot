@@ -1,3 +1,5 @@
+import logging
+
 from typing import List
 
 import boto3
@@ -10,7 +12,7 @@ table_transactions = DYNAMO_DB.Table("transactions")
 
 
 def save_transactions(transactions: List[str]):
-    print("creating")
+    logging.info("creating")
     for transaction in transactions[1:]:
         transaction = transaction.split(",")
         transaction_dict = {
@@ -19,11 +21,13 @@ def save_transactions(transactions: List[str]):
             "transaction": transaction[COLUMNS["transaction"]],
         }
         table_transactions.put_item(Item=transaction_dict)
-    print("creating successful")
+    logging.info("creating successful")
 
 
 def get_transactions():
     response = table_transactions.scan()
     data = response["Items"]
 
-    print(data)
+    logging.debug(data)
+
+    return data

@@ -1,3 +1,4 @@
+import logging
 from constants import RECIPIENTS
 from dynamo_service import save_transactions
 from email_service import send_email
@@ -19,8 +20,8 @@ def lambda_handler(event, context):
     filename_csv = save_csv_tmp(csv_file)
     balance = get_balance(csv_file)
 
-    print("sending email")
+    logging.info("sending email")
     send_email("Transactions Resume", RECIPIENTS, balance, filename_csv)
-    print("sending email successful")
+    logging.info("sending email successful")
 
     return {"success": True}
