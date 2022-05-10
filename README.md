@@ -5,7 +5,8 @@ This mvp is built using terraform to building the infrastructure on AWS, specifi
 .
 └── redesigned-robot/
     ├── src/
-    │   ├── aws_service.py
+    │   ├── dynamo_service.py
+    │   ├── s3_service.py
     │   ├── constants.py
     │   ├── email_service.py
     │   ├── email_transactions.j2
@@ -14,19 +15,20 @@ This mvp is built using terraform to building the infrastructure on AWS, specifi
     │   ├── process_csv.py
     │   └── requirements.txt
     ├── main.tf
-    └── variables.tf
+    ├── variables.tf
+    └── policy.json
 ```
 
 
 # How it works?
 
-Every time when a csv file is uploaded into the s3 bucket, the bucket launch a event to invoke the lambda, then when the lambda is invoked receives the event that contains the bucket name and the key of the object(csv filename), getting the csv from the s3, process the file, save it in tmp directory of lambda(the lambdas don't have a filesystem that allows WRITE operations, only READ operations) and finally sending the email with the resume of balance and the csv file that store in the tmp directory.
+Every time when a csv file is uploaded into the s3 bucket, the bucket launch a event to invoke the lambda, then when the lambda is invoked receives the event that contains the bucket name and the key of the object(csv filename), getting the csv from the s3, process the file, saving the transaction on a table of dynamo db(transactions), save it in tmp directory of lambda(the lambdas don't have a filesystem that allows WRITE operations, only READ operations) and finally sending the email with the resume of balance and the csv file that store in the tmp directory.****
 
 
 # A big picture of structure
 
 The terraform files main.tf and variables.tf help to create a s3 that invoke the lambda to process a new csv when is uploaded.
-![Diagram](https://user-images.githubusercontent.com/28666420/167497625-55f5dab1-fc4f-4606-96fb-c008d7ff5908.png)
+![Diagram](https://user-images.githubusercontent.com/28666420/167527969-65f623b8-9fca-4f66-90bc-883e81288149.png)
 
 
 # How install the project
