@@ -1,15 +1,12 @@
-import boto3
+from typing import List
 
-from typing import List, Dict
+import boto3
 
 from constants import COLUMNS
 
+DYNAMO_DB = boto3.resource("dynamodb")
 
-
-
-DYNAMO_DB = boto3.resource('dynamodb')
-
-table_transactions =DYNAMO_DB.Table('transactions')
+table_transactions = DYNAMO_DB.Table("transactions")
 
 
 def save_transactions(transactions: List[str]):
@@ -27,6 +24,6 @@ def save_transactions(transactions: List[str]):
 
 def get_transactions():
     response = table_transactions.scan()
-    data = response['Items']
+    data = response["Items"]
 
     print(data)

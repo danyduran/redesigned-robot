@@ -1,8 +1,4 @@
-COLUMNS = {
-    "id": 0,
-    "date": 1,
-    "transaction": 2
-}
+COLUMNS = {"id": 0, "date": 1, "transaction": 2}
 
 FORMAT_DATE = "%m/%d"
 FORMAT_MONTH = "%B"

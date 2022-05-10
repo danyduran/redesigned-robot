@@ -1,16 +1,14 @@
-from email.mime.base import MIMEBase
-from email import encoders
 import os
 import smtplib
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import Dict, List
 
 import jinja2
 
-from typing import List, Dict
-
-from constants import USERNAME, PASSWORD, HOST_EMAIL, PORT_EMAIL
-
+from constants import HOST_EMAIL, PASSWORD, PORT_EMAIL, USERNAME
 
 
 def render_template(template, params):
@@ -24,14 +22,20 @@ def render_template(template, params):
     return template.render(params)
 
 
-def send_email(subject: str, recipients: List[str], params: Dict, filename_csv: str, template_name: str = './email_transactions.j2'):
+def send_email(
+    subject: str,
+    recipients: List[str],
+    params: Dict,
+    filename_csv: str,
+    template_name: str = "./email_transactions.j2",
+):
     html = str(render_template(template_name, params))
 
-    message = MIMEMultipart('alternative')
+    message = MIMEMultipart("alternative")
     message["From"] = USERNAME
     message["Subject"] = subject
     message["To"] = ",".join(recipients)
-    message.attach(MIMEText(html, 'html'))
+    message.attach(MIMEText(html, "html"))
 
     try:
         attach_file(filename_csv, message)
@@ -50,10 +54,12 @@ def send_email(subject: str, recipients: List[str], params: Dict, filename_csv: 
 
 
 def attach_file(filename_csv, message):
-    attach_file = open(f'/tmp/{filename_csv}', 'rb')
-    payload = MIMEBase('application', "csv", Name="transaction.csv")
+    attach_file = open(f"/tmp/{filename_csv}", "rb")
+    payload = MIMEBase("application", "csv", Name="transaction.csv")
     payload.set_payload((attach_file).read())
     encoders.encode_base64(payload)
-    payload.add_header('Content-Decomposition', 'attachment', filename='transaction.csv')
+    payload.add_header(
+        "Content-Decomposition", "attachment", filename="transaction.csv"
+    )
     message.attach(payload)
     print("attach sucess")
