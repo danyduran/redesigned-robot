@@ -1,5 +1,6 @@
 
-from aws_service import get_csv_from_s3
+from dynamo_service import get_transactions, save_transactions
+from s3_service import get_csv_from_s3
 from constants import RECIPIENTS
 from email_service import send_email
 
@@ -15,6 +16,8 @@ def lambda_handler(event, context):
 
     csv_obj = get_csv_from_s3(bucket_name, file_name)
     csv_file = csv_obj.read().decode('utf-8').splitlines()
+    save_transactions(csv_file)
+    get_transactions()
     filename_csv = save_csv_tmp(csv_file)
     balance = get_balance(csv_file)
     print("sending email")

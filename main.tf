@@ -36,6 +36,16 @@ data "archive_file" "zip" {
     null_resource.pip
   ]
 }
+
+
+
+resource "aws_iam_role_policy" "lambda_policy" {
+  name = "lambda_policy"
+  role = aws_iam_role.iam_for_lambda.id
+
+  policy = file("policy.json")
+}
+
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
@@ -126,4 +136,17 @@ resource "aws_s3_bucket_notification" "bucket_notification_csv" {
   }
 
   depends_on = [aws_lambda_permission.allow_bucket]
+}
+
+
+resource "aws_dynamodb_table" "transactions-table" {
+  name             = "transactions"
+  hash_key         = "id"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  attribute {
+    name = "id"
+    type = "S"
+  }
 }
